@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
+const keys = require('../config/keys');
 
 // Models
 const mongoose = require('mongoose');
@@ -10,7 +11,7 @@ const User = mongoose.model('user');
 // Passport setup
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = 'secret';
+opts.secretOrKey = keys.secret;
 opts.issuer = 'simpelapps';
 opts.audience = 'api.simpelapps.web.id';
 
