@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -11,5 +11,15 @@ const userSchema = new Schema({
   alamat: String,
   no_hp: String,
 });
+
+userSchema.methods.verifyPassword = async function verifyPassword(password) {
+  const verifyHash = await new Promise((resolve, reject) => {
+    bcrypt.compare(password, this.hash, (err, verifiedPass) => {
+      if (err) reject(err);
+      resolve(verifiedPass);
+    });
+  });
+  return verifyHash;
+};
 
 mongoose.model('user', userSchema);

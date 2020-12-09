@@ -35,7 +35,7 @@ mongoose.connect(keys.mongoURI, {
 
 // Models
 require('./models/User');
-
+require('./services/passport');
 // Routes
 const authRoutes = require('./routes/authRoutes');
 
