@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 
 const jsonTemplate = require('../utils/jsonTemplate');
 const keys = require('../config/keys');
-const { session } = require('passport');
 const User = mongoose.model('user');
 
 module.exports = (app) => {

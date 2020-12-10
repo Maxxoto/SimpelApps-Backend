@@ -7,4 +7,4 @@ const sampelSchema = new Schema({
   varianObject: [{ type: Object, required: true }],
 });
 
-mongoose.model('sampel', sampelSchema);
+mongoose.model('sample', sampelSchema);

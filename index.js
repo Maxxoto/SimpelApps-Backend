@@ -34,15 +34,20 @@ mongoose.connect(keys.mongoURI, {
 });
 
 // Models
+require('./models/Examination');
+require('./models/Invoice');
+require('./models/Sample');
 require('./models/User');
 require('./services/passport');
 // Routes
 const authRoutes = require('./routes/authRoutes');
+const examinationRoutes = require('./routes/examinationRoutes');
 
 app.get('/', (req, res) => {
-  res.send('Application is healthy');
+  res.send('API Services is healthy');
 });
 authRoutes(app);
+examinationRoutes(app);
 
 app.listen(PORT, () => {
   console.log(`Server live and running on port ${PORT}`);

@@ -10,4 +10,4 @@ const pemeriksaanSchema = new Schema({
   _invoiceID: { type: ObjectID, ref: 'invoice', required: true },
 });
 
-mongoose.model('pemeriksaan', pemeriksaanSchema);
+mongoose.model('examination', pemeriksaanSchema);
