@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const invoiceSchema = new Schema({
-  invoice_code: { type: String, required: true },
+  invoice_code: { type: Number, required: true, unique: true },
   _itemID: [{ type: ObjectID, ref: 'sample', required: true }],
   status: {
     type: String,
