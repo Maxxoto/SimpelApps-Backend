@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const sampelSchema = new Schema({
-  name_sampel: String,
-  varianObject: [{ type: Object, required: true }],
+  nama_sampel: { type: String, required: true },
+  varianPengujian: [{ type: Object, required: true }],
 });
 
 mongoose.model('sample', sampelSchema);

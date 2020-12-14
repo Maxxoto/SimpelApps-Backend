@@ -1,13 +1,11 @@
 const keys = require('../config/keys');
 
-module.exports = () => {
-  const token = 'token';
-
+module.exports = (token) => {
   const option = {};
   option.baseURL = keys.baseURL;
   option.headers = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    Authorization: token,
   };
 
   // TODO : TOKEN

@@ -43,12 +43,17 @@ require('./services/passport');
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const examinationRoutes = require('./routes/examinationRoutes');
+const invoiceRoutes = require('./routes/invoiceRoutes');
+const sampleRoutes = require('./routes/sampleRoutes');
 
 app.get('/', (req, res) => {
   res.send('API Services is healthy');
 });
+
 authRoutes(app);
 examinationRoutes(app);
+invoiceRoutes(app);
+sampleRoutes(app);
 
 app.listen(PORT, () => {
   console.log(`Server live and running on port ${PORT}`);

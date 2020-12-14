@@ -8,6 +8,7 @@ const userSchema = new Schema({
   hak_akses: { type: String, enum: ['admin', 'user'], default: 'user' },
   nama_lengkap: String,
   nama_instansi: String,
+  jenis_usaha: String,
   alamat: String,
   no_hp: String,
 });

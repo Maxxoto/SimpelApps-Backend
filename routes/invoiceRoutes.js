@@ -2,87 +2,30 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const axios = require('axios');
 
-const Examination = mongoose.model('examination');
+const Invoice = mongoose.model('invoice');
 const jsonTemplate = require('../utils/jsonTemplate');
-const option = require('../utils/axiosSetting');
 const nanoid = require('nanoid/non-secure');
 
 module.exports = (app) => {
   app.post(
-    '/examinations/create',
+    '/invoices/create',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const { _id } = req.user;
         const { item, total_harga } = req.body;
-        const token = req.headers['authorization'];
-        // Buat invoice terlebih dahulu
-
-        // Generate Invoice Code & Kode Pemeriksaan
 
         const year = new Date().getFullYear();
         const uniqueCode = nanoid.customAlphabet('1234567890', '5');
-        const kode_pemeriksaan = `KP/${year}/${uniqueCode()}`;
+        const invoice_code = `INV/${year}/${uniqueCode()}`;
 
-        const invoice = await axios.post(
-          '/invoices/create',
-          {
-            item,
-            total_harga,
-          },
-          option(token),
-        );
+        const invoice = await new Invoice({
+          invoice_code,
+          _itemID: item,
+          total_harga,
+        }).save();
 
         if (invoice) {
-          const newExamine = await new Examination({
-            _userID: _id,
-            kode_pemeriksaan,
-            _invoiceID: invoice.data.data._id,
-          }).save();
-
-          if (newExamine) {
-            res.send(jsonTemplate(200, 'Data pemeriksaan berhasil dibuat .'));
-          } else {
-            res
-              .status(400)
-              .send(
-                jsonTemplate(
-                  400,
-                  'Terjadi kesalahan ketika membuat data pemeriksaan .',
-                ),
-              );
-          }
-        } else {
-          res
-            .status(400)
-            .send(
-              jsonTemplate(400, 'Terjadi kesalahan ketika membuat invoice .'),
-            );
-        }
-      } catch (error) {
-        res
-          .status(400)
-          .send(
-            jsonTemplate(
-              '400',
-              `Terjadi kesalahan , silahkan ulangi beberapa saat lagi . \n Error : ${error}`,
-            ),
-          );
-      }
-    },
-  );
-
-  app.get(
-    '/examinations',
-    passport.authenticate('jwt', { session: false }),
-    async (req, res) => {
-      try {
-        const data = await Examination.find().exec();
-
-        if (data) {
-          res.send(jsonTemplate(200, 'Berhasil mendapatkan data', data));
-        } else {
-          res.status(400).send(jsonTemplate(400, 'Gagal mendapatkan data'));
+          res.send(jsonTemplate(200, 'Data invoice berhasil dibuat', invoice));
         }
       } catch (error) {
         res
@@ -98,17 +41,51 @@ module.exports = (app) => {
   );
 
   app.get(
-    '/examinations/:id',
+    '/invoices',
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      try {
+        const invoice = await Invoice.find().exec();
+
+        if (invoice) {
+          res.send(
+            jsonTemplate(200, 'Berhasil mendapatkan data invoice', invoice),
+          );
+        } else {
+          res
+            .status(400)
+            .send(jsonTemplate(400, 'Gagal mendapatkan data invoice'));
+        }
+      } catch (error) {
+        res
+          .status(400)
+          .send(
+            jsonTemplate(
+              400,
+              `Terjadi kesalahan , silahkan ulangi beberapa saat lagi . \n Error : ${error}`,
+            ),
+          );
+      }
+    },
+  );
+
+  app.get(
+    '/invoices/:id',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
         const { id } = req.params;
-        const data = await Examination.findById(id).exec();
 
-        if (data) {
-          res.send(jsonTemplate(200, 'Berhasil mendapatkan data', data));
+        const invoice = await Invoice.findById(id).exec();
+
+        if (invoice) {
+          res.send(
+            jsonTemplate(200, 'Berhasil mendapatkan data invoice', invoice),
+          );
         } else {
-          res.status(400).send(jsonTemplate(400, 'Gagal mendapatkan data'));
+          res
+            .status(400)
+            .send(jsonTemplate(400, 'Gagal mendapatkan data invoice'));
         }
       } catch (error) {
         res
@@ -124,23 +101,27 @@ module.exports = (app) => {
   );
 
   app.put(
-    '/examinations/:id',
+    '/invoices/:id',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
         const { id } = req.params;
         const { status } = req.body;
 
-        const data = await Examination.findByIdAndUpdate(
+        const invoice = await Invoice.findByIdAndUpdate(
           id,
           { status },
           { new: true },
         ).exec();
 
-        if (data) {
-          res.send(jsonTemplate(200, 'Berhasil mengupdate data', data));
+        if (invoice) {
+          res.send(
+            jsonTemplate(200, 'Berhasil mengupdate data invoice', invoice),
+          );
         } else {
-          res.status(400).send(jsonTemplate(400, 'Gagal mengupdate data'));
+          res
+            .status(400)
+            .send(jsonTemplate(400, 'Berhasil mengupdate data invoice'));
         }
       } catch (error) {
         res
@@ -156,19 +137,19 @@ module.exports = (app) => {
   );
 
   app.delete(
-    '/examinations/:id',
+    '/invoices/:id',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
         const { id } = req.params;
-        const data = await Examination.findByIdAndDelete(id).exec();
+        const invoice = await Invoice.findByIdAndDelete(id).exec();
 
-        if (data) {
-          res.send(jsonTemplate(200, 'Berhasil menghapus data pemeriksaan'));
+        if (invoice) {
+          res.send(jsonTemplate(200, 'Berhasil menghapus data invoice'));
         } else {
           res
             .status(400)
-            .send(jsonTemplate(400, 'Gagal menghapus data pemeriksaan'));
+            .send(jsonTemplate(400, 'Gagal menghapus data invoice'));
         }
       } catch (error) {
         res
