@@ -1,11 +1,10 @@
-const { ObjectID } = require('bson');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
 const invoiceSchema = new Schema({
   invoice_code: { type: String, required: true, unique: true },
-  _itemID: [{ type: ObjectID, ref: 'sample', required: true }],
+  _itemID: [{ type: Schema.Types.ObjectId, ref: 'sample', required: true }],
   status: {
     type: String,
     enum: ['pending', 'proses', 'lunas'],

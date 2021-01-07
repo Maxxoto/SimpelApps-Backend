@@ -77,7 +77,10 @@ module.exports = (app) => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const data = await Examination.find().exec();
+        const data = await Examination.find()
+          .populate('_userID')
+          .populate('_invoiceID')
+          .exec();
 
         if (data) {
           res.send(jsonTemplate(200, 'Berhasil mendapatkan data', data));
