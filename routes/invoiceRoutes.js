@@ -45,7 +45,7 @@ module.exports = (app) => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const invoice = await Invoice.find().exec();
+        const invoice = await Invoice.find().populate('_itemID').exec();
 
         if (invoice) {
           res.send(
