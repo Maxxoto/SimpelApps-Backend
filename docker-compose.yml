@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   backend:
-    container_name: simpelapps-service
+    container_name: api-service
     restart: always
     build: .
     ports:
@@ -9,6 +9,11 @@ services:
     environment:
       - MONGO_USERNAME=hamlet
       - MONGO_PASSWORD=toor
+      - NODE_ENV=production
+    volumes:
+      - ./logs:/service/logs
+    depends_on:
+      - mongodb
   mongodb:
     container_name: mongodb
     restart: always
